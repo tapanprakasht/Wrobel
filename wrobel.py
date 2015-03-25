@@ -28,7 +28,10 @@ userUsername = None
 userEmail = None
 userStatus = None
 
+userlist = None
+
 usersignup = None
+
 
 ################# Web interface part ######################################################
 
@@ -46,7 +49,7 @@ class AboutPage(Resource):
         n = re.sub(r'{{user}}',userUsername,s)
 
         request.write(n)
-        #request.finish()
+
 
 
 class HomePage(Resource):
@@ -103,6 +106,10 @@ class IndexPage(Resource):
         h3.update(statusKey)
         hStatus = h3.digest()
 
+        userlistKey = str("userlist")
+        userlistHash = hashlib.sha1()
+        userlistHash.update(userlistKey)
+        huserlist = userlistHash.digest()
 
 
         def checkValue(result,hkey,username,password,request):
@@ -145,8 +152,17 @@ class IndexPage(Resource):
                 value = result[hStatus]
                 print value
                 userStatus = value
-                request.write('<script> window.location=\"index\"; </script>')
+
+
+        def getUserlist(result,huserlist,request):
+            global userlist
+            if type(result) == dict:
+                value = result[huserlist]
+                userlist = value
+                print userlist
+                request.write('<script> window.location=\"index\"; localStorage.setItem(\"userlist\",\"' + userlist + '\"); </script>')
                 request.finish()
+
 
         df = node.iterativeFindValue(hKey)
         df.addCallback(checkValue,hKey,username,password,request)
@@ -156,6 +172,9 @@ class IndexPage(Resource):
 
         df3 = node.iterativeFindValue(hStatus)
         df3.addCallback(getStatus,hStatus,request)
+
+        df4 = node.iterativeFindValue(huserlist)
+        df4.addCallback(getUserlist,huserlist,request)
 
         return NOT_DONE_YET
 
@@ -196,6 +215,13 @@ class SignupPage(Resource):
         follownumHash.update(follownumKey)
         hFollownum = follownumHash.digest()
 
+
+        userlistKey = str("userlist")
+        userlistHash = hashlib.sha1()
+        userlistHash.update(userlistKey)
+        huserlist = userlistHash.digest()
+
+
         def showValue(result,username,hEmail,hStatus,hFollownum,password,email,status,request):
 
             if type(result) == dict:
@@ -212,13 +238,45 @@ class SignupPage(Resource):
                 request.write("<script>alert(\"New user created\");window.history.back();</script>")
                 request.finish()
 
+        def addNewuser(result,huserlist,username):
+             if type(result) == dict:
+                 value = result[huserlist]
+                 value = value +"," + username
+                 print value
+
+                 h1 = hashlib.sha1()
+                 h1.update("userlist")
+                 hval = h1.digest()
+
+                 df4 = node.iterativeStore(hval,value)
+                 print 'Userlist updated'
+             else:
+                 print 'No such value'
+
+
         df = node.iterativeFindValue(hKey)
         df.addCallback(showValue,hKey,hEmail,hStatus,hFollownum,password,email,status,request)
+
+        df2 = node.iterativeFindValue(huserlist)
+        df2.addCallback(addNewuser,huserlist,username)
+
         return NOT_DONE_YET
 
 
 
-################ End of web interface part ##################################################
+class logoutPage(Resource):
+    def render_GET(self, request):
+        global userUsername
+        global userEmail
+        global userStatus
+        userEmail =None
+        userUsername = None
+        userStatus = None
+
+        return  request.write('<script>alert(\"Successfully loged out\"); window.location=\"../\";</script>')
+        request.finish()
+
+################ End of web interface part ############################################################################
 
 
 
@@ -377,20 +435,23 @@ if __name__ == '__main__':
     #     knownNodes = None
 
     #node = entangled.dtuple.DistributedTupleSpacePeer( udpPort=int(sys.argv[1]) )
-    knownNodes = [("192.168.0.103", int("8000"))]
+    knownNodes = [("192.168.0.114", int("8000"))]
     node = entangled.dtuple.DistributedTupleSpacePeer( udpPort=int("6198") )
     node.joinNetwork(knownNodes)
     #twisted.internet.reactor.callLater(0, getOption)
     print '\n\n*** Wrobel - A P2P Microblogging Platform ***\n\n'
 
+
 ##################################### Call rendering corresponding pages #######################
+
     root = Resource()
     root.putChild("",IndexPage())
     root.putChild("signup",SignupPage())
     root.putChild("index",HomePage())
     root.putChild("about",AboutPage())
+    root.putChild("logout",logoutPage())
 
-################# Linking static files ########################################
+################# Linking static files #######################################################
 
     root.putChild('img', static.File("./img"))
     root.putChild('css', static.File("./css"))
