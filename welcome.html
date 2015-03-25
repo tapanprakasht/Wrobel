@@ -30,14 +30,11 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
     <style type="text/css">
-    #centr {
-        margin-left: auto ;
-        margin-right: auto ;
-    }
+        #page-top {
+            overflow: hidden;
+        }
     </style>
-
 </head>
 
 <body id="page-top" class="index">
@@ -53,47 +50,42 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="../" style="color:#fff;">Wrobel</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <form class="navbar-form navbar-right" method="post">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="username" placeholder="Username" required="">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" name="password" placeholder="Password" required="">
+                            </div>
+                            <input type="submit" value="Log in" class="btn btn-xs">
+                    </li>
+                </ul>
+            </div>
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container-fluid -->
     </nav>
 
     <!-- Header -->
-    <div class="container" id="centr" style="padding-top:100px;">
-        <div class="row clearfix">
-            <div class="col-lg-4 col-md-4 col-sm-4 col-lg-offset-6 col-md-offset-6 col-sm-offset-6">
-                <h3 style="color:#fff;">Register</h3>
-                <form method="post">
-                    <div class="form-group">
-                        <input type="text" style="width:250px;" class="form-control" name="username" placeholder="Username" required="">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" style="width:250px;" class="form-control" name="password" placeholder="Password" required="">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" style="width:250px;" class="form-control" name="confpassword" placeholder="Confirm Password" required="">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" style="width:250px;" class="form-control" name="status" placeholder="Status" required="">
-                    </div>
-                    <div class="form-group">
-                        <input type="email" style="width:250px;" class="form-control" name="email" placeholder="Email" required="">
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" style="width:250px;" class="btn btn-xs" value="Sign Up" required="">
-                    </div>
-                </form>
+    <header>
+        <div class="container">
+            <div class="intro-text">
+                <div class="intro-lead-in">Wrobel</div>
+                <div class="intro-heading">It's Nice To Meet You</div>
+                <a href="signup" class="btn btn-xs">SIgn Up</a>
             </div>
         </div>
-    </div>
+    </header>
 
     <!-- Footer -->
     <footer>
-        <p class="copyright text-muted" style="text-align:center;padding-top:130px;">Copyright &copy; Wrobel 2014</p>
+        <p class="copyright text-muted" style="text-align:center;">Copyright &copy; Wrobel 2014</p>
     </footer>
 
     <!-- jQuery -->
@@ -101,7 +93,7 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
-
+    
 </body>
 
 </html>
