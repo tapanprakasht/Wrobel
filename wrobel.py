@@ -2,10 +2,10 @@
 
 
 
-from twisted.web import server, static
+from twisted.web import static
 from twisted.web.server import Site,NOT_DONE_YET
 from twisted.web.resource import Resource
-from twisted.internet import reactor,defer,threads
+
 
 
 import re
@@ -20,6 +20,8 @@ import entangled.dtuple
 import hashlib
 
 
+####### Global values ###############
+
 node = None
 post = None
 
@@ -32,6 +34,7 @@ userlist = None
 
 usersignup = None
 
+#########################################
 
 ################# Web interface part ######################################################
 
@@ -61,19 +64,7 @@ class HomePage(Resource):
         userpost = cgi.escape(request.args["userpost"][0])
         putPost(userpost)
         return '<script>alert(\"Your tweet has been posted\" );window.history.back();</script>'
-''''
-class FormPage(Resource):
-    def render_GET(self, request):
-        #getValue()
-        template = open('home.html')
-        return template.read()
 
-
-    def render_POST(self, request):
-        userpost = cgi.escape(request.args["userpost"][0])
-        putPost(userpost)
-        return '<script>alert(\"Your tweet has been posted\" );window.history.back();</script>'
-'''
 
 class IndexPage(Resource):
     def render_GET(self,request):
@@ -461,6 +452,6 @@ if __name__ == '__main__':
 ############################# End of call #######################################################
     wrobelsite = Site(root)
 
-    twisted.internet.reactor.listenTCP(8881, wrobelsite)
-    twisted.internet.reactor.run()
+    twisted.internet.reactor.listenTCP(8881, wrobelsite)        #start wrobel at localhost:8881
+    twisted.internet.reactor.run()                              #Started reactor event loop
     
